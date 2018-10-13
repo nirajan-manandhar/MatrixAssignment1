@@ -48,7 +48,23 @@ public:
     //Destructor
     ~matrix()= default;
 
-    friend ostream& operator<<(ostream& out, const vector<vector<double>>& matrix);
+    //Overloaded Insertion Operator
+    friend ostream& operator<<(ostream& out, const matrix& matrix);
+
+    //Overloaded ==
+    friend bool operator==( const matrix& lhs, const matrix& rhs );
+
+    //Prefix ++
+    const matrix& operator++ ();
+
+    //Postfix ++
+    const matrix operator++ (int);
+
+    //Prefix --
+    const matrix& operator-- ();
+
+    //Postfix --
+    const matrix operator-- (int);
 
 
 };
