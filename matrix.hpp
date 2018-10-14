@@ -66,6 +66,35 @@ public:
     //Postfix --
     const matrix operator-- (int);
 
+    //Copy constructor
+    matrix(const matrix& a);
+
+    //Swap
+    friend void swap(matrix& first, matrix& second);
+
+    //Overloaded assignment operator
+    matrix& operator=(matrix m);
+
+    //Overloaded += operator
+    matrix& operator+=(matrix m);
+
+    //Overloaded + operator
+    friend matrix operator+(matrix lhs, const matrix& rhs);
+
+    //Overloaded -= operator
+    matrix& operator-=(matrix m);
+
+    //Overloaded - operator
+    friend matrix operator-(matrix lhs, const matrix& rhs);
+
+    //Overloaded *= operator
+    matrix& operator*=(matrix m);
+
+    //Overloaded * operator
+    friend matrix operator*(matrix lhs, const matrix& rhs);
+
+
+
 
 };
 
