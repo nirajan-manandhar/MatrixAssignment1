@@ -15,9 +15,9 @@ matrix::matrix(int n) {
         throw "n cannot be zero or negative";
     }
 
-    vectormatrix.resize(n);
+    vectormatrix.resize((size_t)n);
     for (int i = 0; i < n; i++)
-        vectormatrix[i].resize(n, 0.0);
+        vectormatrix[i].resize((size_t)n, 0.0);
 }
 
 matrix::matrix(int r, int c) {
@@ -26,9 +26,9 @@ matrix::matrix(int r, int c) {
         throw "r and c have to be positive values";
     }
 
-    vectormatrix.resize(r);
+    vectormatrix.resize((size_t)r);
     for (int i = 0; i < r; i++) {
-        vectormatrix[i].resize(c, 0.0);
+        vectormatrix[i].resize((size_t) c, 0.0);
     }
 }
 
@@ -40,13 +40,13 @@ matrix::matrix(vector<double> vector1) {
         throw "received negative value";
     }
 
-    vectormatrix.resize(root);
+    vectormatrix.resize((size_t)root);
     for (int i = 0; i < root; i++)
-        vectormatrix[i].resize(root);
+        vectormatrix[i].resize((size_t)root);
 
-    for (int j = 0; j < vectormatrix.size(); j++) {
-        for (int k = 0, index = 0; k < vectormatrix[j].size(); k++, index++) {
-            vectormatrix[j][k] = vector1[index];
+    for (auto &j : vectormatrix) {
+        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+            j[k] = vector1[index];
         }
     }
 
@@ -55,8 +55,9 @@ matrix::matrix(vector<double> vector1) {
 
 void matrix::setvalue(int row, int column, double value) {
     if (row > vectormatrix.size() || column > vectormatrix[1].size() ||
-        row <= 0 || column <= 0) {
-        throw "Invalid Input for matrix(row, column, double";
+        row < 0 || column < 0) {
+
+        throw "Input out of range";
     }
 
     vectormatrix[row][column] = value;
@@ -67,9 +68,9 @@ double matrix::getvalue(int row, int column) {
 }
 
 void matrix::clear() {
-    for (int j = 0; j < vectormatrix.size(); j++) {
-        for (int k = 0, index = 0; k < vectormatrix[j].size(); k++, index++) {
-            vectormatrix[j][k] = 0.0;
+    for (auto &j : vectormatrix) {
+        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+            j[k] = 0.0;
         }
     }
 }
@@ -78,11 +79,11 @@ void matrix::clear() {
 ostream &operator<<(ostream &out, const matrix &matrix) {
 
 
-    for (int j = 0; j < matrix.vectormatrix.size(); j++) {
-        size_t last = matrix.vectormatrix[j].size() - 1;
+    for (const auto &j : matrix.vectormatrix) {
+        size_t last = j.size() - 1;
         out << "[";
-        for (int k = 0, index = 0; k < matrix.vectormatrix[j].size(); k++, index++) {
-            out << matrix.vectormatrix[k][j];
+        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+            out << j[k];
             if (k != last)
                 out << ", ";
         }
@@ -116,9 +117,9 @@ bool operator==(const matrix &lhs, const matrix &rhs) {
 }
 
 const matrix &matrix::operator++() {
-    for (int j = 0; j < vectormatrix.size(); j++) {
-        for (int k = 0, index = 0; k < vectormatrix[j].size(); k++, index++) {
-            vectormatrix[j][k] += 1;
+    for (auto &j : vectormatrix) {
+        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+            j[k] += 1;
         }
     }
     return *this;
@@ -126,18 +127,18 @@ const matrix &matrix::operator++() {
 
 const matrix matrix::operator++(int) {
     matrix tmp(*this);
-    for (int j = 0; j < vectormatrix.size(); j++) {
-        for (int k = 0, index = 0; k < vectormatrix[j].size(); k++, index++) {
-            vectormatrix[j][k] += 1;
+    for (auto &j : vectormatrix) {
+        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+            j[k] += 1;
         }
     }
     return tmp;
 }
 
 const matrix &matrix::operator--() {
-    for (int j = 0; j < vectormatrix.size(); j++) {
-        for (int k = 0, index = 0; k < vectormatrix[j].size(); k++, index++) {
-            vectormatrix[j][k] -= 1;
+    for (auto &j : vectormatrix) {
+        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+            j[k] -= 1;
         }
     }
     return *this;
@@ -145,9 +146,9 @@ const matrix &matrix::operator--() {
 
 const matrix matrix::operator--(int) {
     matrix tmp(*this);
-    for (int j = 0; j < vectormatrix.size(); j++) {
-        for (int k = 0, index = 0; k < vectormatrix[j].size(); k++, index++) {
-            vectormatrix[j][k] -= 1;
+    for (auto &j : vectormatrix) {
+        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+            j[k] -= 1;
         }
     }
     return tmp;
@@ -166,8 +167,8 @@ void swap(matrix &first, matrix &second) {
     swap(first.vectormatrix, second.vectormatrix);
 }
 
-matrix& matrix::operator=(matrix m) {
-    swap(*this,m);
+matrix &matrix::operator=(matrix m) {
+    swap(*this, m);
     return *this;
 }
 
@@ -178,12 +179,12 @@ matrix &matrix::operator+=(matrix m) {
     unsigned long innerlhs = this->vectormatrix[0].size();
     unsigned long innerrhs = this->vectormatrix[0].size();
 
-    if(lhs != rhs || innerlhs != innerrhs)
+    if (lhs != rhs || innerlhs != innerrhs)
         throw "error";
 
     for (int j = 0; j < this->vectormatrix.size(); j++) {
         for (int k = 0; k < vectormatrix[j].size(); k++) {
-            this->vectormatrix[j][k] +=  m.vectormatrix[j][k];
+            this->vectormatrix[j][k] += m.vectormatrix[j][k];
         }
     }
 
@@ -197,7 +198,7 @@ matrix operator+(matrix lhs, const matrix &rhs) {
     unsigned long innerlhs = lhs.vectormatrix[0].size();
     unsigned long innerrhs = rhs.vectormatrix[0].size();
 
-    if(outerlhs != outerrhs || innerlhs != innerrhs)
+    if (outerlhs != outerrhs || innerlhs != innerrhs)
         throw "error";
 
 
@@ -213,15 +214,15 @@ matrix &matrix::operator-=(matrix m) {
     unsigned long innerlhs = this->vectormatrix[0].size();
     unsigned long innerrhs = this->vectormatrix[0].size();
 
-    if(lhs != rhs || innerlhs != innerrhs)
+    if (lhs != rhs || innerlhs != innerrhs)
         throw "error";
 
-    if(lhs != rhs || innerlhs != innerrhs)
+    if (lhs != rhs || innerlhs != innerrhs)
         throw "error";
 
     for (int j = 0; j < this->vectormatrix.size(); j++) {
         for (int k = 0; k < vectormatrix[j].size(); k++) {
-            this->vectormatrix[j][k] -=  m.vectormatrix[j][k];
+            this->vectormatrix[j][k] -= m.vectormatrix[j][k];
         }
     }
 
@@ -236,12 +237,46 @@ matrix operator-(matrix lhs, const matrix &rhs) {
     unsigned long innerlhs = lhs.vectormatrix[0].size();
     unsigned long innerrhs = rhs.vectormatrix[0].size();
 
-    if(outerlhs != outerrhs || innerlhs != innerrhs)
+    if (outerlhs != outerrhs || innerlhs != innerrhs)
         throw "error";
 
     lhs -= rhs;
     return lhs;
 }
+
+matrix &matrix::operator*=(matrix m) {
+    unsigned long colsfirst = this->vectormatrix[0].size();
+    unsigned long rowssecond = this->vectormatrix.size();
+
+    if (colsfirst != rowssecond)
+        throw "error";
+
+    matrix temp((int) this->vectormatrix.size(), (int) m.vectormatrix[0].size());
+
+    for (int j = 0; j < this->vectormatrix.size(); j++) {
+        for (int k = 0; k < m.vectormatrix[0].size(); k++) {
+            double sum = 0;
+            for(int l = 0; l < this->vectormatrix[0].size(); l++) {
+                sum += this->vectormatrix[j][l] * m.vectormatrix[l][k];
+            }
+            temp.setvalue(j,k,sum);
+        }
+    }
+
+    this->vectormatrix = temp.vectormatrix;
+
+    return *this;
+}
+
+matrix operator*(matrix lhs, const matrix &rhs) {
+    lhs *= rhs;
+    return lhs;
+}
+
+
+
+
+
 
 
 

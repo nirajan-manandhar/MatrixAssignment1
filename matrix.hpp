@@ -8,6 +8,8 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <stdexcept>
+
 
 
 using namespace std;
@@ -22,7 +24,7 @@ public:
 
     //constructor that accepts a positive integer n and creates a
     // square n x n matrix that contains 0.0s.
-    matrix(int);
+    explicit matrix(int);
 
     //constructor that accepts two positive integers r and c and
     //creates a matrix with r rows and c columns that contains 0.0s.
@@ -30,7 +32,7 @@ public:
 
     //constructor that accepts an array of double. The size of the
     //array must have an integer square root
-    matrix(vector<double>);
+    explicit matrix(vector<double>);
 
     //3-parameter mutator called set value that accepts two integers
     //representing row and column and a double representing the new value
