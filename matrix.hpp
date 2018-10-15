@@ -56,6 +56,9 @@ public:
     //Overloaded ==
     friend bool operator==( const matrix& lhs, const matrix& rhs );
 
+    //Overloaded !=
+    friend bool operator==( const matrix& lhs, const matrix& rhs );
+
     //Prefix ++
     const matrix& operator++ ();
 

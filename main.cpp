@@ -25,6 +25,10 @@ int main() {
     matrix* importance = matrix1;
 
 
+
+
+
+
     //Making the importance matrix
 
     //Number of rows
@@ -118,21 +122,33 @@ int main() {
 
     matrix rank(M.vectormatrix.size(), 1);
 
+
     for(int x = 0; x < rank.vectormatrix.size(); x++){
         for(int y = 0; y < rank.vectormatrix[0].size(); y++){
             rank.setvalue(x,y,1.0);
         }
     }
 
-    matrix past_rank;
-    while(past_rank.vectormatrix[0] != rank.vectormatrix[0]) {
-        past_rank = rank;
-        rank *= M;
-    }
+    for(int i = 0; i < 10; i++)
+        rank = M * rank;
 
-    rank *= M;
     cout << rank << endl;
 
+    //Column Number
+    for(int i = 0; i < rank.vectormatrix[0].size(); i++){
+        int n = 0;
+
+        for(int j = 0; j < rank.vectormatrix.size(); j++) {
+            n += rank.vectormatrix[j][i];
+        }
+
+        for(int k = 0; k < rank.vectormatrix.size(); k++) {
+            rank.setvalue(k, i, rank.vectormatrix[k][i]/n);
+        }
+
+    }
+
+    cout << rank << endl;
 
     cout << "Hello, World!" << endl;
 

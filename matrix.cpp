@@ -136,6 +136,10 @@ bool operator==(const matrix &lhs, const matrix &rhs) {
     return true;
 }
 
+bool operator!=(const matrix &lhs, const matrix &rhs) {
+    return !operator==(lhs, rhs);
+}
+
 const matrix &matrix::operator++() {
     for (auto &j : vectormatrix) {
         for (int k = 0; k < j.size(); k++) {
