@@ -11,8 +11,13 @@ matrix::matrix() {
 }
 
 matrix::matrix(int n) {
-    if (n <= 0) {
-        throw "n cannot be zero or negative";
+    try{
+        if (n <= 0)
+            throw out_of_range("Error: n cannot be zero or negative");
+
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
     }
 
     vectormatrix.resize((size_t)n);
@@ -21,9 +26,13 @@ matrix::matrix(int n) {
 }
 
 matrix::matrix(int r, int c) {
-    if (r <= 0 || c <= 0) {
-        cout << "exception";
-        throw "r and c have to be positive values";
+    try{
+        if (r <= 0 || c <= 0)
+            throw out_of_range("Error: r and c have to be positive values");
+
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
     }
 
     vectormatrix.resize((size_t)r);
@@ -33,19 +42,25 @@ matrix::matrix(int r, int c) {
 }
 
 matrix::matrix(vector<double> vector1) {
-    int size = vector1.size();
+    size_t size = vector1.size();
     double root = sqrt(size);
 
-    if (floor(root) != root) {
-        throw "received negative value";
+    try{
+        if (floor(root) != root)
+            throw out_of_range("Error: Size of vector has to be square rootable.");
+
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
     }
 
     vectormatrix.resize((size_t)root);
     for (int i = 0; i < root; i++)
         vectormatrix[i].resize((size_t)root);
 
+    int index = 0;
     for (auto &j : vectormatrix) {
-        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+        for (int k = 0; k < j.size(); k++, index++) {
             j[k] = vector1[index];
         }
     }
@@ -54,22 +69,27 @@ matrix::matrix(vector<double> vector1) {
 
 
 void matrix::setvalue(int row, int column, double value) {
-    if (row > vectormatrix.size() || column > vectormatrix[1].size() ||
-        row < 0 || column < 0) {
 
-        throw "Input out of range";
+    try{
+        if (row > vectormatrix.size() || column > vectormatrix[1].size() ||
+            row < 0 || column < 0)
+            throw out_of_range("Error: SetValue, Input out of range");
+
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
     }
 
     vectormatrix[row][column] = value;
 }
 
-double matrix::getvalue(int row, int column) {
+double matrix::getvalue(int row, int column) const {
     return vectormatrix[row][column];
 }
 
 void matrix::clear() {
     for (auto &j : vectormatrix) {
-        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+        for (int k = 0; k < j.size(); k++) {
             j[k] = 0.0;
         }
     }
@@ -82,7 +102,7 @@ ostream &operator<<(ostream &out, const matrix &matrix) {
     for (const auto &j : matrix.vectormatrix) {
         size_t last = j.size() - 1;
         out << "[";
-        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+        for (int k = 0; k < j.size(); k++) {
             out << j[k];
             if (k != last)
                 out << ", ";
@@ -106,7 +126,7 @@ bool operator==(const matrix &lhs, const matrix &rhs) {
     }
 
     for (int j = 0; j < loutersize; j++) {
-        for (int k = 0, index = 0; k < routersize; k++, index++) {
+        for (int k = 0; k < routersize; k++) {
             double TOLERANCE = (lhs.vectormatrix[j][k]) - (rhs.vectormatrix[j][k]);
             if (TOLERANCE >= 0.1)
                 return false;
@@ -118,7 +138,7 @@ bool operator==(const matrix &lhs, const matrix &rhs) {
 
 const matrix &matrix::operator++() {
     for (auto &j : vectormatrix) {
-        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+        for (int k = 0; k < j.size(); k++) {
             j[k] += 1;
         }
     }
@@ -128,7 +148,7 @@ const matrix &matrix::operator++() {
 const matrix matrix::operator++(int) {
     matrix tmp(*this);
     for (auto &j : vectormatrix) {
-        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+        for (int k = 0; k < j.size(); k++) {
             j[k] += 1;
         }
     }
@@ -137,7 +157,7 @@ const matrix matrix::operator++(int) {
 
 const matrix &matrix::operator--() {
     for (auto &j : vectormatrix) {
-        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+        for (int k = 0; k < j.size(); k++) {
             j[k] -= 1;
         }
     }
@@ -147,19 +167,15 @@ const matrix &matrix::operator--() {
 const matrix matrix::operator--(int) {
     matrix tmp(*this);
     for (auto &j : vectormatrix) {
-        for (int k = 0, index = 0; k < j.size(); k++, index++) {
+        for (int k = 0; k < j.size(); k++) {
             j[k] -= 1;
         }
     }
     return tmp;
 }
 
-matrix::matrix(const matrix &matrix) {
-    for (int j = 0; j < vectormatrix.size(); j++) {
-        for (int k = 0, index = 0; k < vectormatrix[j].size(); k++, index++) {
-            vectormatrix[j][k] = matrix.vectormatrix[j][k];
-        }
-    }
+matrix::matrix(const matrix& matrix) {
+    this->vectormatrix = matrix.vectormatrix;
 }
 
 void swap(matrix &first, matrix &second) {
@@ -179,8 +195,15 @@ matrix &matrix::operator+=(matrix m) {
     unsigned long innerlhs = this->vectormatrix[0].size();
     unsigned long innerrhs = this->vectormatrix[0].size();
 
-    if (lhs != rhs || innerlhs != innerrhs)
-        throw "error";
+    try{
+        if (lhs != rhs || innerlhs != innerrhs)
+            throw out_of_range("Error: += Matrices are not the same size");
+
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
+    }
+
 
     for (int j = 0; j < this->vectormatrix.size(); j++) {
         for (int k = 0; k < vectormatrix[j].size(); k++) {
@@ -198,8 +221,14 @@ matrix operator+(matrix lhs, const matrix &rhs) {
     unsigned long innerlhs = lhs.vectormatrix[0].size();
     unsigned long innerrhs = rhs.vectormatrix[0].size();
 
-    if (outerlhs != outerrhs || innerlhs != innerrhs)
-        throw "error";
+    try{
+        if (outerlhs != outerrhs || innerlhs != innerrhs)
+            throw out_of_range("Error: + Matrices are not the same size");
+
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
+    }
 
 
     lhs += rhs;
@@ -214,11 +243,14 @@ matrix &matrix::operator-=(matrix m) {
     unsigned long innerlhs = this->vectormatrix[0].size();
     unsigned long innerrhs = this->vectormatrix[0].size();
 
-    if (lhs != rhs || innerlhs != innerrhs)
-        throw "error";
+    try{
+        if (lhs != rhs || innerlhs != innerrhs)
+            throw out_of_range("Error: -= Matrices are not the same size");
 
-    if (lhs != rhs || innerlhs != innerrhs)
-        throw "error";
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
+    }
 
     for (int j = 0; j < this->vectormatrix.size(); j++) {
         for (int k = 0; k < vectormatrix[j].size(); k++) {
@@ -237,8 +269,14 @@ matrix operator-(matrix lhs, const matrix &rhs) {
     unsigned long innerlhs = lhs.vectormatrix[0].size();
     unsigned long innerrhs = rhs.vectormatrix[0].size();
 
-    if (outerlhs != outerrhs || innerlhs != innerrhs)
-        throw "error";
+    try{
+        if (outerlhs != outerrhs || innerlhs != innerrhs)
+            throw out_of_range("Error: - Matrices are not the same size");
+
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
+    }
 
     lhs -= rhs;
     return lhs;
@@ -248,8 +286,14 @@ matrix &matrix::operator*=(matrix m) {
     unsigned long colsfirst = this->vectormatrix[0].size();
     unsigned long rowssecond = this->vectormatrix.size();
 
-    if (colsfirst != rowssecond)
-        throw "error";
+    try{
+        if (colsfirst != rowssecond)
+            throw out_of_range("Error: *= Matrices are not compatible sizes");
+
+    }catch(const std::exception& e) {
+        std::cout << e.what() << '\n';
+        throw;
+    }
 
     matrix temp((int) this->vectormatrix.size(), (int) m.vectormatrix[0].size());
 

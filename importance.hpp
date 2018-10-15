@@ -1,0 +1,14 @@
+//
+// Created by Nirajan on 2018-10-14.
+//
+
+#ifndef MATRIXASSIGNMENT1_IMPORTANCE_HPP
+#define MATRIXASSIGNMENT1_IMPORTANCE_HPP
+
+
+class importance {
+
+};
+
+
+#endif //MATRIXASSIGNMENT1_IMPORTANCE_HPP

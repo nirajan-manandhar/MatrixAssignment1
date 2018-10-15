@@ -16,9 +16,9 @@ using namespace std;
 
 class matrix {
 
-private:
-    vector< vector<double> > vectormatrix;
 public:
+    vector< vector<double> > vectormatrix;
+
     //Default constructor
     matrix();
 
@@ -42,7 +42,7 @@ public:
     //2-parameter accessor that accepts two integers
     //representing row and column and returns the value in the matrix from
     //the specified location.
-    double getvalue(int, int);
+    double getvalue(int, int) const;
 
     //sets all values in the matrix to 0.0
     void clear();
