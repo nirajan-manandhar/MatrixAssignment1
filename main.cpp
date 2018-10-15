@@ -135,17 +135,12 @@ int main() {
     cout << rank << endl;
 
     //Column Number
-    for(int i = 0; i < rank.vectormatrix[0].size(); i++){
-        int n = 0;
-
-        for(int j = 0; j < rank.vectormatrix.size(); j++) {
-            n += rank.vectormatrix[j][i];
-        }
-
-        for(int k = 0; k < rank.vectormatrix.size(); k++) {
-            rank.setvalue(k, i, rank.vectormatrix[k][i]/n);
-        }
-
+    double sum = 0;
+    for(int r = 0; r < rank.vectormatrix.size(); r++) {
+        sum += rank.getvalue(r, 0);
+    }
+    for(int j = 0; j < rank.vectormatrix.size(); j++) {
+        rank.setvalue(j, 0, rank.vectormatrix[j][0] / sum);
     }
 
     cout << rank << endl;
