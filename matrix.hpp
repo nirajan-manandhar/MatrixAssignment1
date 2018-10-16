@@ -32,17 +32,17 @@ public:
 
     //constructor that accepts an array of double. The size of the
     //array must have an integer square root
-    explicit matrix(vector<double>);
+    matrix(vector<double>);
 
     //3-parameter mutator called set value that accepts two integers
     //representing row and column and a double representing the new value
     //for the specified location.
-    void setvalue(int, int, double);
+    void set_value(int, int, double);
 
     //2-parameter accessor that accepts two integers
     //representing row and column and returns the value in the matrix from
     //the specified location.
-    double getvalue(int, int) const;
+    double get_value(int, int) const;
 
     //sets all values in the matrix to 0.0
     void clear();
@@ -57,7 +57,7 @@ public:
     friend bool operator==( const matrix& lhs, const matrix& rhs );
 
     //Overloaded !=
-    friend bool operator==( const matrix& lhs, const matrix& rhs );
+    friend bool operator!=( const matrix& lhs, const matrix& rhs );
 
     //Prefix ++
     const matrix& operator++ ();

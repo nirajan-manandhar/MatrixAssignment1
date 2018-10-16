@@ -13,11 +13,11 @@ matrix::matrix() {
 matrix::matrix(int n) {
     try{
         if (n <= 0)
-            throw out_of_range("Error: n cannot be zero or negative");
+            throw invalid_argument("Error: n cannot be zero or negative");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
     vectormatrix.resize((size_t)n);
@@ -27,12 +27,12 @@ matrix::matrix(int n) {
 
 matrix::matrix(int r, int c) {
     try{
-        if (r <= 0 || c <= 0)
-            throw out_of_range("Error: r and c have to be positive values");
+        if (r < 0 || c < 0)
+            throw invalid_argument("Error: r and c have to be positive values");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
     vectormatrix.resize((size_t)r);
@@ -47,11 +47,11 @@ matrix::matrix(vector<double> vector1) {
 
     try{
         if (floor(root) != root)
-            throw out_of_range("Error: Size of vector has to be square rootable.");
+            throw invalid_argument("Error: Size of vector has to be square rootable.");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
     vectormatrix.resize((size_t)root);
@@ -68,22 +68,31 @@ matrix::matrix(vector<double> vector1) {
 }
 
 
-void matrix::setvalue(int row, int column, double value) {
+void matrix::set_value(int row, int column, double value) {
 
     try{
         if (row > vectormatrix.size() || column > vectormatrix[1].size() ||
             row < 0 || column < 0)
-            throw out_of_range("Error: SetValue, Input out of range");
+            throw invalid_argument("Error: SetValue, Input out of range");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
     vectormatrix[row][column] = value;
 }
 
-double matrix::getvalue(int row, int column) const {
+double matrix::get_value(int row, int column) const {
+    try{
+        if(row < 0 || column < 0 || row > vectormatrix.size() || column > vectormatrix[0].size())
+            throw invalid_argument("Vector coordinates are invalid!");
+
+    } catch (const std::exception& e){
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
+    }
+
     return vectormatrix[row][column];
 }
 
@@ -112,7 +121,7 @@ ostream &operator<<(ostream &out, const matrix &matrix) {
     return out;
 }
 
-bool operator==(const matrix &lhs, const matrix &rhs) {
+bool operator==(const matrix& lhs, const matrix& rhs) {
 
     unsigned long loutersize = lhs.vectormatrix.size();
     unsigned long routersize = rhs.vectormatrix.size();
@@ -128,7 +137,7 @@ bool operator==(const matrix &lhs, const matrix &rhs) {
     for (int j = 0; j < loutersize; j++) {
         for (int k = 0; k < routersize; k++) {
             double TOLERANCE = (lhs.vectormatrix[j][k]) - (rhs.vectormatrix[j][k]);
-            if (TOLERANCE >= 0.1)
+            if (TOLERANCE >= 0.00001)
                 return false;
         }
     }
@@ -201,11 +210,11 @@ matrix &matrix::operator+=(matrix m) {
 
     try{
         if (lhs != rhs || innerlhs != innerrhs)
-            throw out_of_range("Error: += Matrices are not the same size");
+            throw invalid_argument("Error: += Matrices are not the same size");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
 
@@ -227,11 +236,11 @@ matrix operator+(matrix lhs, const matrix &rhs) {
 
     try{
         if (outerlhs != outerrhs || innerlhs != innerrhs)
-            throw out_of_range("Error: + Matrices are not the same size");
+            throw invalid_argument("Error: + Matrices are not the same size");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
 
@@ -249,11 +258,11 @@ matrix &matrix::operator-=(matrix m) {
 
     try{
         if (lhs != rhs || innerlhs != innerrhs)
-            throw out_of_range("Error: -= Matrices are not the same size");
+            throw invalid_argument("Error: -= Matrices are not the same size");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
     for (int j = 0; j < this->vectormatrix.size(); j++) {
@@ -275,28 +284,28 @@ matrix operator-(matrix lhs, const matrix &rhs) {
 
     try{
         if (outerlhs != outerrhs || innerlhs != innerrhs)
-            throw out_of_range("Error: - Matrices are not the same size");
+            throw invalid_argument("Error: - Matrices are not the same size");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
     lhs -= rhs;
     return lhs;
 }
 
-matrix &matrix::operator*=(matrix m) {
+matrix& matrix::operator*=(matrix m) {
     unsigned long colsfirst = this->vectormatrix[0].size();
     unsigned long rowssecond = this->vectormatrix.size();
 
     try{
         if (colsfirst != rowssecond)
-            throw out_of_range("Error: *= Matrices are not compatible sizes");
+            throw invalid_argument("Error: *= Matrices are not compatible sizes");
 
     }catch(const std::exception& e) {
-        std::cout << e.what() << '\n';
-        throw;
+        std::cerr << e.what() << '\n';
+        exit(EXIT_FAILURE);
     }
 
     matrix temp((int) this->vectormatrix.size(), (int) m.vectormatrix[0].size());
@@ -307,7 +316,7 @@ matrix &matrix::operator*=(matrix m) {
             for(int l = 0; l < this->vectormatrix[0].size(); l++) {
                 sum += this->vectormatrix[j][l] * m.vectormatrix[l][k];
             }
-            temp.setvalue(j,k,sum);
+            temp.set_value(j,k,sum);
         }
     }
 
